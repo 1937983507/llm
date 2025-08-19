@@ -1,6 +1,6 @@
 # LLM — 本地私有化部署 + OpenAI Compatible 接口 + 多客户端示例（Go）
 
-> 目标：在本地私有化部署大模型，开放 **OpenAI Compatible 标准协议** 的服务接口，并用 **LangChain-Go** 与 **go-openai** 两种 Go 客户端发起请求（附 Postman / cURL 示例）。
+> 目标：在本地私有化部署大模型，开放 **OpenAI Compatible 标准协议** 的服务接口，并用 **LangChain-Go**、**go-openai**、**openai-python** 3 种客户端发起请求（附 Postman / cURL 示例）。
 
 ---
 
@@ -10,11 +10,12 @@
   - **Ollama**（便捷式一键拉模型）
   - **llama.cpp**（`llama-server` 提供 **OpenAI 兼容**的 `/v1/chat/completions`）
 - ✅ 提供 **OpenAI Compatible** 的 HTTP API，方便直接复用各类 OpenAI 客户端/SDK。
-- ✅ 演示三类客户端调用：
+- ✅ 演示各类客户端调用：
   - Postman
   - cURL
   - LangChain-Go 框架
   - go-openai 框架
+  - openai python 框架
 
 ---
 
@@ -22,11 +23,12 @@
 
 ```bash
 llm/
-├── LangChainGo/    # LangChain-Go 框架
+├── LangChainGo/    # LangChain-Go
 │ └── main.go
-└── OpenAIGo/       # OpenAI-Go 框架
+└── OpenAIGo/       # OpenAI-Go
 │ └── main.go
-
+└── OpenAIPython/   # OpenAI Python
+  └── main.py
 ```
 
 ---
@@ -44,7 +46,7 @@ llm/
 3. 交互式对话启动的同时，Ollama 也提供访问接口
 
 - POST http://localhost:11434/api/generate ，是 **Ollama 原生**生成接口（**不是** OpenAI 规范）
-- POST http://localhost:11434/v1/chat/completions ，是 **OpenAI 兼容**的端点，可参考[Ollama](https://ollama.com/blog/openai-compatibility?utm_source=chatgpt.com)
+- POST http://localhost:11434/v1/chat/completions ，是 **OpenAI 兼容**的端点，可参考 [Ollama](https://ollama.com/blog/openai-compatibility?utm_source=chatgpt.com)
 
 > **/api/generate 可选参数（节选）**  
 > 请求形如：
@@ -102,8 +104,9 @@ llm/
 
 ## 🔌 如何发起请求
 
-> 以下示例基于 OpenAI 兼容端点
-> **ollama**: `http://localhost:11434/v1/chat/completions` > **llama.cpp** ：`http://localhost:8080/v1/chat/completions`
+以下示例基于 OpenAI 兼容端点
+**ollama**: `http://localhost:11434/v1/chat/completions`
+**llama.cpp** ：`http://localhost:8080/v1/chat/completions`
 
 ### 1) Postman
 
@@ -337,6 +340,41 @@ func main() {
 }
 ```
 
+### 5) openai python
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+   base_url = 'http://localhost:8080/v1',
+   api_key='xx', # required, but unused
+)
+
+allMessages = [
+   {"role": "system", "content": "You are a helpful assistant."},
+   {"role": "user", "content": "Who won the world series in 2020?"},
+   {"role": "assistant", "content": "The LA Dodgers won in 2020."},
+   {"role": "user", "content": "Where was it played?"}
+ ]
+
+# === 流式输出 ===
+stream = client.chat.completions.create(
+ model="deepseek-r1:1.5b",
+ messages=allMessages,
+ stream=True
+)
+for event in stream:
+   print(event)
+
+
+# # === 非流式输出 ===
+# response = client.chat.completions.create(
+#   model="deepseek-r1:1.5b",
+#   messages=allMessages
+# )
+# print(response.choices[0].message.content)
+```
+
 ---
 
 ## 🛠️ 运行与开发
@@ -350,10 +388,19 @@ func main() {
 
 ```bash
 # LangChain-Go
-cd llm/LangChainGo && go run main.go
+cd llm/LangChainGo
+go mod tidy
+go run main.go
 
 # go-openai
-cd llm/OpenAIGo && go run main.go
+cd llm/OpenAIGo
+go mod tidy
+go run main.go
+
+# openai python
+cd llm/OpenAIPython
+pip install openai
+python main.py
 ```
 
 ### 3）常见问题
@@ -372,5 +419,7 @@ cd llm/OpenAIGo && go run main.go
 - Ollama API（`/api/generate`、`/api/chat` 与 OpenAI 兼容说明）。 ([Postman](https://www.postman.com/postman-student-programs/ollama-api/documentation/suc47x8/ollama-rest-api?utm_source=chatgpt.com), [Medium](https://medium.com/%40laurentkubaski/ollama-chat-endpoint-parameters-21a7ac1252e5?utm_source=chatgpt.com), [Ollama](https://ollama.com/blog/openai-compatibility?utm_source=chatgpt.com))
 
 - go-openai（自定义 BaseURL / 兼容端点接入）。 ([Go Packages](https://pkg.go.dev/github.com/sashabaranov/go-openai?utm_source=chatgpt.com), [GitHub](https://github.com/sashabaranov/go-openai?utm_source=chatgpt.com))
+
+- openai python（调用接入参考）（[PyPI](https://pypi.org/project/openai/)）
 
 - OpenAI API 参考（SSE / Chat Completions 语义）。 ([OpenAI 平台](https://platform.openai.com/docs/api-reference?utm_source=chatgpt.com))
