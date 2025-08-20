@@ -110,9 +110,10 @@ llm/
 
 ## 🔌 如何发起请求
 
-以下示例基于 OpenAI 兼容端点
-**ollama**: `http://localhost:11434/v1/chat/completions`
-**llama.cpp** ：`http://localhost:8080/v1/chat/completions`
+以下示例基于 OpenAI 兼容端点:
+
+- **ollama**: `http://localhost:11434/v1/chat/completions`
+- **llama.cpp** ：`http://localhost:8080/v1/chat/completions`
 
 ### 1) Postman
 
@@ -407,7 +408,7 @@ user_proxy.initiate_chat(assistant, message="你好请你介绍一下自己")  #
 
 ```
 
-### 6) AutoGen python
+### 7) OpenAI Agent SDK python
 
 ```python
 import asyncio
