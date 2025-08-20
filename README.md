@@ -1,6 +1,6 @@
 # LLM — 本地私有化部署 + OpenAI Compatible 接口 + 多客户端示例（Go）
 
-> 目标：在本地私有化部署大模型，开放 **OpenAI Compatible 标准协议** 的服务接口，并用 **LangChain-Go**、**go-openai**、**openai-python** 3 种客户端发起请求（附 Postman / cURL 示例）。
+> 目标：在本地私有化部署大模型，开放 **OpenAI Compatible 标准协议** 的服务接口，并用 **LangChain-Go**、**go-openai**、**openai-python** 等多种客户端发起请求（附 Postman / cURL 示例）。
 
 ---
 
@@ -16,6 +16,7 @@
   - LangChain-Go 框架
   - go-openai 框架
   - openai python 框架
+  - AutoGen python 框架
 
 ---
 
@@ -25,9 +26,11 @@
 llm/
 ├── LangChainGo/    # LangChain-Go
 │ └── main.go
-└── OpenAIGo/       # OpenAI-Go
+├── OpenAIGo/       # OpenAI-Go
 │ └── main.go
-└── OpenAIPython/   # OpenAI Python
+├── OpenAIPython/   # OpenAI Python
+│ └── main.py
+└── AutoGen/        # AutoGen Python
   └── main.py
 ```
 
@@ -375,6 +378,32 @@ for event in stream:
 # print(response.choices[0].message.content)
 ```
 
+### 6) AutoGen python
+
+```python
+from autogen import AssistantAgent, UserProxyAgent
+
+config_list = [
+  {
+    "model": "deepseek-r1:8b",
+    "base_url": "http://localhost:8080/v1",
+    "api_key": "xxx",
+  }
+]
+
+assistant = AssistantAgent("assistant", llm_config={"config_list": config_list})
+
+user_proxy = UserProxyAgent(
+    "user_proxy",
+    code_execution_config={"work_dir": "coding", "use_docker": False},
+    human_input_mode="NEVER",                       # 关键参数：禁用人工输入
+    max_consecutive_auto_reply=5,                   # 最大自动回复次数
+    default_auto_reply="你分析的对，请继续分析"       # 自动回复 assistant
+)
+user_proxy.initiate_chat(assistant, message="你好请你介绍一下自己")  # Plot a chart of NVDA and TESLA stock price change YTD
+
+```
+
 ---
 
 ## 🛠️ 运行与开发
@@ -401,6 +430,14 @@ go run main.go
 cd llm/OpenAIPython
 pip install openai
 python main.py
+
+# AutoGen python
+cd llm/AutoGen
+pip install pyautogen
+pip install autogen
+pip install openai==1.66.2
+pip install ag2[openai]
+python main.py
 ```
 
 ### 3）常见问题
@@ -421,5 +458,7 @@ python main.py
 - go-openai（自定义 BaseURL / 兼容端点接入）。 ([Go Packages](https://pkg.go.dev/github.com/sashabaranov/go-openai?utm_source=chatgpt.com), [GitHub](https://github.com/sashabaranov/go-openai?utm_source=chatgpt.com))
 
 - openai python（调用接入参考）（[PyPI](https://pypi.org/project/openai/)）
+
+- AutoGen python（调用接入参考）（[PyPI](https://pypi.org/project/openai/)）
 
 - OpenAI API 参考（SSE / Chat Completions 语义）。 ([OpenAI 平台](https://platform.openai.com/docs/api-reference?utm_source=chatgpt.com))
