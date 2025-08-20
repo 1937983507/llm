@@ -459,6 +459,6 @@ python main.py
 
 - openai python（调用接入参考）（[PyPI](https://pypi.org/project/openai/)）
 
-- AutoGen python（调用接入参考）（[PyPI](https://pypi.org/project/openai/)）
+- AutoGen python（调用接入参考）（[PyPI](https://pypi.org/project/autogen/)）
 
 - OpenAI API 参考（SSE / Chat Completions 语义）。 ([OpenAI 平台](https://platform.openai.com/docs/api-reference?utm_source=chatgpt.com))
