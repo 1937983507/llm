@@ -519,6 +519,8 @@ python main.py
 
 - Ollama API（`/api/generate`、`/api/chat` 与 OpenAI 兼容说明）。 ([Postman](https://www.postman.com/postman-student-programs/ollama-api/documentation/suc47x8/ollama-rest-api?utm_source=chatgpt.com), [Medium](https://medium.com/%40laurentkubaski/ollama-chat-endpoint-parameters-21a7ac1252e5?utm_source=chatgpt.com), [Ollama](https://ollama.com/blog/openai-compatibility?utm_source=chatgpt.com))
 
+- LangChain go（调用接入参考）（[LangChain 官网](https://python.langchain.com/docs/introduction/), [GitHub](https://github.com/langchain-ai/langchain)）
+
 - go-openai（自定义 BaseURL / 兼容端点接入）。 ([Go Packages](https://pkg.go.dev/github.com/sashabaranov/go-openai?utm_source=chatgpt.com), [GitHub](https://github.com/sashabaranov/go-openai?utm_source=chatgpt.com))
 
 - openai python（调用接入参考）（[PyPI](https://pypi.org/project/openai/)）
